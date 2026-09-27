@@ -1,0 +1,31 @@
+# Binaries
+dist/
+bin/
+terraform-provider-hitechcloud
+terraform-provider-hitechcloud.exe
+
+# Terraform
+.terraform/
+.terraform.lock.hcl
+*.tfstate
+*.tfstate.*
+crash.log
+crash.*.log
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+*.tfvars
+*.tfvars.json
+
+# Test artifacts
+coverage.out
+coverage.html
+
+# IDE / OS
+.vscode/
+*.swp
+.DS_Store
+
+# Local scratch
+_collection_*.md
