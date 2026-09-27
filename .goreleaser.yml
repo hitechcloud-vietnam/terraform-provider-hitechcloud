@@ -14,7 +14,8 @@ builds:
     flags:
       - -trimpath
     ldflags:
-      - "-s -w -X main.version={{.Version}}"
+      - "-s -w -X main.version={{.Version}} -X main.commit={{.Commit}}"
+    binary: "{{ .ProjectName }}_v{{ .Version }}"
     goos:
       - linux
       - darwin

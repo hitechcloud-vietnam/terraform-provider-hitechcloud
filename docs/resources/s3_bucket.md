@@ -8,7 +8,7 @@ description: |-
 # hitechcloud_s3_bucket (Resource)
 
 Manages an S3 bucket of a HiTechCloud storage service
-(`/api/service/{service_id}/s3/bucket`). The API may auto-prefix the requested
+(`/api/service/{service_id}/s3/buckets`). The API may auto-prefix the requested
 name; the effective name is exposed as the computed `bucket` attribute.
 
 ## Example Usage

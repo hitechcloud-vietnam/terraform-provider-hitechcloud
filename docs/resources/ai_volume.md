@@ -8,7 +8,7 @@ description: |-
 # hitechcloud_ai_volume (Resource)
 
 Manages a volume of the HiTechCloud AI Factory
-(`/api/service/{service_id}/ai/volume`). All attributes force a new resource.
+(`/api/service/{service_id}/volumes`). All attributes force a new resource.
 
 ## Example Usage
 

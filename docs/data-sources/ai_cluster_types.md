@@ -8,7 +8,7 @@ description: |-
 # hitechcloud_ai_cluster_types (Data Source)
 
 Lists the AI cluster types of a HiTechCloud service
-(`GET /api/service/{service_id}/ai/clustertype`).
+(`GET /api/service/{service_id}/clusters/types`).
 
 ## Example Usage
 

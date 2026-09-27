@@ -28,6 +28,7 @@ import (
 	"github.com/hitechcloud-vietnam/terraform-provider-hitechcloud/resource/vportal"
 	"github.com/hitechcloud-vietnam/terraform-provider-hitechcloud/resource/vserver"
 	"github.com/hitechcloud-vietnam/terraform-provider-hitechcloud/resource/vstorage"
+	"github.com/hitechcloud-vietnam/terraform-provider-hitechcloud/resource/vsupport"
 )
 
 // Environment variable names honoured by the provider.
@@ -184,6 +185,17 @@ func (p *hiTechCloudProvider) DataSources(_ context.Context) []func() datasource
 		vaifactory.AIClusterTypesDataSource,
 		vstorage.S3BucketsDataSource,
 		vstorage.S3SubusersDataSource,
+		vbilling.BalanceDataSource,
+		vbilling.CategoriesDataSource,
+		vbilling.PaymentFeesDataSource,
+		vdomain.WhoisDataSource,
+		vdomain.DomainDNSTypesDataSource,
+		vdomain.DomainAvailabilityDataSource,
+		vportal.URLShortenerLinksDataSource,
+		vsupport.TicketsDataSource,
+		vsupport.TicketDepartmentsDataSource,
+		vsupport.NotificationsDataSource,
+		vsupport.StatusesDataSource,
 	}
 }
 
@@ -205,5 +217,8 @@ func (p *hiTechCloudProvider) Resources(_ context.Context) []func() resource.Res
 		vstorage.S3BucketResource,
 		vstorage.S3SubuserResource,
 		vportal.URLShortenerLinkResource,
+		vaccount.ContactResource,
+		vsupport.TicketResource,
+		vserver.RDNSResource,
 	}
 }

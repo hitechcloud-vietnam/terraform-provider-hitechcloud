@@ -8,7 +8,7 @@ description: |-
 # hitechcloud_ai_ssh_key (Resource)
 
 Manages an SSH key of the HiTechCloud AI Factory
-(`/api/service/{service_id}/ai/sshkey`). Setting `default = true` marks the key
+(`/api/service/{service_id}/sshkeys`). Setting `default = true` marks the key
 as the account default after create/update.
 
 ## Example Usage

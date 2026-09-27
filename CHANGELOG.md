@@ -1,6 +1,6 @@
 # Changelog
 
-## 0.1.0 (unreleased)
+## 1.0.0 (September 28, 2026)
 
 FEATURES:
 
@@ -20,6 +20,9 @@ FEATURES:
 * **New resource:** `hitechcloud_s3_bucket`
 * **New resource:** `hitechcloud_s3_subuser`
 * **New resource:** `hitechcloud_url_shortener_link`
+* **New resource:** `hitechcloud_contact`
+* **New resource:** `hitechcloud_ticket`
+* **New resource:** `hitechcloud_rdns`
 * **New data source:** `hitechcloud_account`
 * **New data source:** `hitechcloud_contacts`
 * **New data source:** `hitechcloud_services`
@@ -39,6 +42,17 @@ FEATURES:
 * **New data source:** `hitechcloud_ai_cluster_types`
 * **New data source:** `hitechcloud_s3_buckets`
 * **New data source:** `hitechcloud_s3_subusers`
+* **New data source:** `hitechcloud_balance`
+* **New data source:** `hitechcloud_categories`
+* **New data source:** `hitechcloud_payment_fees`
+* **New data source:** `hitechcloud_whois`
+* **New data source:** `hitechcloud_domain_dns_types`
+* **New data source:** `hitechcloud_domain_availability`
+* **New data source:** `hitechcloud_url_shortener_links`
+* **New data source:** `hitechcloud_tickets`
+* **New data source:** `hitechcloud_ticket_departments`
+* **New data source:** `hitechcloud_notifications`
+* **New data source:** `hitechcloud_statuses`
 
 NOTES:
 

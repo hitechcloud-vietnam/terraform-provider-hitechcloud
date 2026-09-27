@@ -28,7 +28,7 @@ terraform {
   required_providers {
     hitechcloud = {
       source  = "hitechcloud-vietnam/hitechcloud"
-      version = "~> 0.1"
+      version = "~> 1.0"
     }
   }
 }

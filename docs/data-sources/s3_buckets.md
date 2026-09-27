@@ -8,7 +8,7 @@ description: |-
 # hitechcloud_s3_buckets (Data Source)
 
 Lists the S3 buckets of a HiTechCloud storage service
-(`GET /api/service/{service_id}/s3/bucket`).
+(`GET /api/service/{service_id}/s3/buckets`).
 
 ## Example Usage
 

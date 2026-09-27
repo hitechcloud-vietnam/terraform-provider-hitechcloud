@@ -19,6 +19,10 @@ permissions:
 jobs:
   goreleaser:
     runs-on: ubuntu-latest
+    env:
+      # The secrets context is unavailable in step `if` conditions; mirror it
+      # into env so signing can be skipped before the GPG secrets are set.
+      HAS_GPG: ${{ secrets.GPG_PRIVATE_KEY != '' }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -42,13 +46,15 @@ jobs:
         run: go test ./... -timeout 30m
 
       - name: Import GPG key
+        if: env.HAS_GPG == 'true'
         uses: crazy-max/ghaction-import-gpg@v6
         id: import_gpg
         with:
           gpg_private_key: ${{ secrets.GPG_PRIVATE_KEY }}
           passphrase: ${{ secrets.GPG_PASSPHRASE }}
 
-      - name: Run GoReleaser
+      - name: Run GoReleaser (signed)
+        if: env.HAS_GPG == 'true'
         uses: goreleaser/goreleaser-action@v6
         with:
           version: '~> v2'
@@ -56,4 +62,13 @@ jobs:
         env:
           GPG_FINGERPRINT: ${{ steps.import_gpg.outputs.fingerprint }}
           # GitHub sets this automatically
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Run GoReleaser (unsigned, secrets not configured yet)
+        if: env.HAS_GPG != 'true'
+        uses: goreleaser/goreleaser-action@v6
+        with:
+          version: '~> v2'
+          args: release --clean --skip=sign
+        env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

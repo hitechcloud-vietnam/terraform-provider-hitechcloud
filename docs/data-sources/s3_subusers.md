@@ -8,7 +8,7 @@ description: |-
 # hitechcloud_s3_subusers (Data Source)
 
 Lists the S3 sub-users of a HiTechCloud storage service
-(`GET /api/service/{service_id}/s3/subuser`).
+(`GET /api/service/{service_id}/s3/subusers`).
 
 ## Example Usage
 

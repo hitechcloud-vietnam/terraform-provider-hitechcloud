@@ -8,7 +8,7 @@ description: |-
 # hitechcloud_url_shortener_link (Resource)
 
 Manages a shortened URL in the HiTechCloud portal
-(`/api/url` shortener endpoints). Changing `url` or `label` forces a new
+(`/api/url-shortener/shorten`). Changing `url` or `label` forces a new
 resource.
 
 ## Example Usage

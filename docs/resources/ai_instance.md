@@ -8,7 +8,7 @@ description: |-
 # hitechcloud_ai_instance (Resource)
 
 Manages a HiTechCloud AI Factory GPU instance
-(`/api/service/{service_id}/ai/instance`). Creation waits until the instance
+(`/api/service/{service_id}/instances`). Creation waits until the instance
 reaches a stable state; deletion waits until the instance is released.
 
 ## Example Usage

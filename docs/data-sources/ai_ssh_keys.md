@@ -8,7 +8,7 @@ description: |-
 # hitechcloud_ai_ssh_keys (Data Source)
 
 Lists the SSH keys of the HiTechCloud AI Factory
-(`GET /api/service/{service_id}/ai/sshkey`).
+(`GET /api/service/{service_id}/sshkeys`).
 
 ## Example Usage
 

@@ -29,3 +29,9 @@ coverage.html
 
 # Local scratch
 _collection_*.md
+
+# Release signing — NEVER commit private key material
+GPG_PRIVATE_KEY.asc
+GPG_REVOCATION_CERT.asc
+*.rev
+*.hitechcloud-user-api-production-2026-09-27.postman_collection.json

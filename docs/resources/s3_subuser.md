@@ -8,7 +8,7 @@ description: |-
 # hitechcloud_s3_subuser (Resource)
 
 Manages an S3 sub-user of a HiTechCloud storage service
-(`/api/service/{service_id}/s3/subuser`). The `secret_key` is returned by the
+(`/api/service/{service_id}/s3/subusers`). The `secret_key` is returned by the
 API only once at creation and is stored in state; it cannot be recovered later.
 
 ## Example Usage

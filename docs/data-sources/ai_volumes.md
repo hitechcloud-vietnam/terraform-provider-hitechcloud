@@ -8,7 +8,7 @@ description: |-
 # hitechcloud_ai_volumes (Data Source)
 
 Lists the volumes of the HiTechCloud AI Factory
-(`GET /api/service/{service_id}/ai/volume`).
+(`GET /api/service/{service_id}/volumes`).
 
 ## Example Usage
 

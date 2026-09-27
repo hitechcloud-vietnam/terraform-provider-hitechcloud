@@ -8,7 +8,7 @@ description: |-
 # hitechcloud_ai_instance_types (Data Source)
 
 Lists the AI instance types of a HiTechCloud service
-(`GET /api/service/{service_id}/ai/instancetype`).
+(`GET /api/service/{service_id}/instances/types`).
 
 ## Example Usage
 

@@ -39,7 +39,7 @@ terraform {
   required_providers {
     hitechcloud = {
       source  = "hitechcloud-vietnam/hitechcloud"
-      version = "~> 0.1"
+      version = "~> 1.0"
     }
   }
 }
@@ -89,6 +89,9 @@ resource "hitechcloud_dns_record" "www" {
 | `hitechcloud_s3_bucket` | S3 bucket of a storage service |
 | `hitechcloud_s3_subuser` | S3 sub-user (access key / secret key) |
 | `hitechcloud_url_shortener_link` | Shortened URL (portal) |
+| `hitechcloud_contact` | Account contact (create/update; API has no delete) |
+| `hitechcloud_ticket` | Support ticket (destroy closes it) |
+| `hitechcloud_rdns` | Reverse DNS (PTR) of a service IP |
 
 ## Data Sources
 
@@ -113,6 +116,17 @@ resource "hitechcloud_dns_record" "www" {
 | `hitechcloud_ai_cluster_types` | AI cluster types |
 | `hitechcloud_s3_buckets` | S3 buckets of a service |
 | `hitechcloud_s3_subusers` | S3 sub-users of a service |
+| `hitechcloud_balance` | Account balance |
+| `hitechcloud_categories` | Product categories |
+| `hitechcloud_payment_fees` | Payment method fees |
+| `hitechcloud_whois` | WHOIS lookup for a domain |
+| `hitechcloud_domain_dns_types` | DNS record types supported by a domain |
+| `hitechcloud_domain_availability` | Domain availability check |
+| `hitechcloud_url_shortener_links` | Shortened URLs |
+| `hitechcloud_tickets` | Support tickets |
+| `hitechcloud_ticket_departments` | Support departments |
+| `hitechcloud_notifications` | Portal notifications |
+| `hitechcloud_statuses` | Service status entries |
 
 ## Importing Existing Resources
 
@@ -156,6 +170,15 @@ Releases are built with [GoReleaser](https://goreleaser.com) for
 `windows/amd64`, packaged as zips with SHA256SUMS and a GPG signature
 (`terraform-registry-manifest.json`, protocol `6.0`). Pushing a `v*` tag
 triggers `.github/workflows/release.yml`.
+
+## Release Signing
+
+Every release ships `SHA256SUMS` plus a detached GPG signature
+(`SHA256SUMS.sig`). The ASCII-armored public signing key is committed as
+[`GPG_PUBLIC_KEY.asc`](GPG_PUBLIC_KEY.asc); see
+[`docs/guides/release-signing.md`](docs/guides/release-signing.md) for how to
+verify releases and how to configure the `GPG_PRIVATE_KEY` / `GPG_PASSPHRASE`
+repository secrets for your own signing key.
 
 ## License
 

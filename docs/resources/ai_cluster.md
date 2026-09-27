@@ -8,7 +8,7 @@ description: |-
 # hitechcloud_ai_cluster (Resource)
 
 Manages a cluster of the HiTechCloud AI Factory
-(`/api/service/{service_id}/ai/cluster`). All attributes force a new resource.
+(`/api/service/{service_id}/clusters`). All attributes force a new resource.
 
 ## Example Usage
 

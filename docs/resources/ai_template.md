@@ -8,7 +8,7 @@ description: |-
 # hitechcloud_ai_template (Resource)
 
 Manages a template of the HiTechCloud AI Factory
-(`/api/service/{service_id}/ai/template`). `name`, `description` and
+(`/api/service/{service_id}/templates`). `name`, `description` and
 `is_public` are updated in place; content changes force a new resource.
 
 ## Example Usage
