@@ -1,4 +1,5 @@
 PROVIDER_NAME := terraform-provider-hitechcloud
+VERSION ?= 1.0.0
 GOFMT_FILES := $(shell find . -name '*.go' -not -path './vendor/*')
 
 default: build
@@ -9,8 +10,8 @@ build: ## Build the provider binary for the current platform
 
 .PHONY: install
 install: build ## Install the provider into the local Terraform plugin cache (dev override alternative)
-	mkdir -p ~/.terraform.d/plugins/registry.terraform.io/hitechcloud-vietnam/hitechcloud/0.0.1/$$(go env GOOS)_$$(go env GOARCH)
-	cp bin/$(PROVIDER_NAME) ~/.terraform.d/plugins/registry.terraform.io/hitechcloud-vietnam/hitechcloud/0.0.1/$$(go env GOOS)_$$(go env GOARCH)/$(PROVIDER_NAME)_v0.0.1
+	mkdir -p ~/.terraform.d/plugins/registry.terraform.io/hitechcloud-vietnam/hitechcloud/$(VERSION)/$$(go env GOOS)_$$(go env GOARCH)
+	cp bin/$(PROVIDER_NAME) ~/.terraform.d/plugins/registry.terraform.io/hitechcloud-vietnam/hitechcloud/$(VERSION)/$$(go env GOOS)_$$(go env GOARCH)/$(PROVIDER_NAME)_v$(VERSION)
 
 .PHONY: fmt
 fmt: ## Format Go source files
@@ -18,7 +19,7 @@ fmt: ## Format Go source files
 
 .PHONY: fmtcheck
 fmtcheck: ## Check Go source formatting
-	@sh -c "'$(CURDIR)/scripts/gofmtcheck.sh'"
+	@unformatted="$$(gofmt -l $(GOFMT_FILES))"; if [ -n "$$unformatted" ]; then echo "The following files are not gofmt-formatted:"; echo "$$unformatted"; exit 1; fi
 
 .PHONY: vet
 vet: ## Run go vet
@@ -38,7 +39,7 @@ test-race: ## Run unit tests with the race detector
 
 .PHONY: testacc
 testacc: ## Run acceptance tests against a mock API (requires terraform CLI on PATH)
-	TF_ACC=1 go test ./internal/provider/... -v -count=1 -timeout=30m
+	TF_ACC=1 go test ./... -v -count=1 -timeout=30m
 
 .PHONY: cover
 cover: ## Run unit tests with coverage
@@ -50,7 +51,7 @@ validate: fmtcheck vet test ## Run formatting checks, vet and unit tests
 
 .PHONY: tools
 tools: ## Install development tooling
-	go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest
+	go install github.com/golangci/golangci-lint/v2/cmd/golangci-lint@latest
 
 .PHONY: generate
 generate: ## Regenerate provider documentation (requires tfplugindocs)

@@ -58,7 +58,9 @@ release:
   extra_files:
     - glob: "terraform-registry-manifest.json"
       name_template: "{{ .ProjectName }}_{{ .Version }}_manifest.json"
-  draft: true
+  # Publish immediately so the release is publicly visible (a draft release
+  # shows "There aren't any releases here" to everyone else).
+  draft: false
   header: |
     ## HiTechCloud Terraform Provider {{ .Version }}
 

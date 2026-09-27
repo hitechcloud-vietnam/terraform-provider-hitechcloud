@@ -28,8 +28,10 @@ for entry in "${OS_ARCH[@]}"; do
   if [ "${os}" = "windows" ]; then ext=".exe"; fi
   out="${DIST}/${PROJECT}_${VERSION}_${os}_${arch}"
   echo "Building ${os}/${arch} ..."
+  # The binary must be named terraform-provider-<NAME>_v<VERSION> for the
+  # Terraform Registry (same convention as GoReleaser).
   GOOS="${os}" GOARCH="${arch}" CGO_ENABLED=0 \
-    go build -trimpath -ldflags "-s -w -X main.version=${VERSION}" -o "${out}/${PROJECT}${ext}" .
+    go build -trimpath -ldflags "-s -w -X main.version=${VERSION}" -o "${out}/${PROJECT}_v${VERSION}${ext}" .
   cp LICENSE README.md CHANGELOG.md terraform-registry-manifest.json "${out}/" 2>/dev/null || true
   mv "${out}/terraform-registry-manifest.json" "${out}/${PROJECT}_${VERSION}_manifest.json" 2>/dev/null || true
   (cd "${out}" && zip -q -r "../${PROJECT}_${VERSION}_${os}_${arch}.zip" .)
