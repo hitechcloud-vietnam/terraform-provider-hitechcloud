@@ -313,7 +313,7 @@ func (c *Client) doOnce(ctx context.Context, method string, u *url.URL, out any)
 	}
 	defer func() {
 		_, _ = io.Copy(io.Discard, io.LimitReader(resp.Body, 4096))
-		resp.Body.Close()
+		_ = resp.Body.Close()
 	}()
 
 	body, err := io.ReadAll(io.LimitReader(resp.Body, 32<<20)) // 32 MiB cap

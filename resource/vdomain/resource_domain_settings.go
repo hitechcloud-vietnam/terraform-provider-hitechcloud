@@ -226,12 +226,3 @@ func (r *domainSettingsResource) refresh(ctx context.Context, model *domainSetti
 	model.IDProtection = types.BoolValue(domain.IDProtection)
 	return true
 }
-
-// splitID keeps parity with other packages (single-part id).
-func splitID(id string) (string, error) {
-	parts, err := client.SplitID(id, 1)
-	if err != nil {
-		return "", common.FormatIDError(id, 1)
-	}
-	return parts[0], nil
-}

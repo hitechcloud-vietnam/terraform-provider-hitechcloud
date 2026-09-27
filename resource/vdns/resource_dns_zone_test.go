@@ -7,7 +7,6 @@ import (
 	"fmt"
 	"net/http"
 	"net/http/httptest"
-	"os"
 	"regexp"
 	"strings"
 	"sync"
@@ -151,10 +150,8 @@ func TestAccDNSZone_basic(t *testing.T) {
 	srv := httptest.NewServer(mock.handler())
 	defer srv.Close()
 
-	os.Setenv("HITECHCLOUD_ENDPOINT", srv.URL)
-	os.Setenv("HITECHCLOUD_TOKEN", "test-token")
-	defer os.Unsetenv("HITECHCLOUD_ENDPOINT")
-	defer os.Unsetenv("HITECHCLOUD_TOKEN")
+	t.Setenv("HITECHCLOUD_ENDPOINT", srv.URL)
+	t.Setenv("HITECHCLOUD_TOKEN", "test-token")
 
 	resource.Test(t, resource.TestCase{
 		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories(),
@@ -190,10 +187,8 @@ func TestAccDNSRecord_updates(t *testing.T) {
 	srv := httptest.NewServer(mock.handler())
 	defer srv.Close()
 
-	os.Setenv("HITECHCLOUD_ENDPOINT", srv.URL)
-	os.Setenv("HITECHCLOUD_TOKEN", "test-token")
-	defer os.Unsetenv("HITECHCLOUD_ENDPOINT")
-	defer os.Unsetenv("HITECHCLOUD_TOKEN")
+	t.Setenv("HITECHCLOUD_ENDPOINT", srv.URL)
+	t.Setenv("HITECHCLOUD_TOKEN", "test-token")
 
 	resource.Test(t, resource.TestCase{
 		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories(),

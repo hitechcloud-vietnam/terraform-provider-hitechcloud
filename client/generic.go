@@ -92,7 +92,7 @@ func (c *Client) GetRaw(ctx context.Context, path string, q url.Values) ([]byte,
 	if err != nil {
 		return nil, fmt.Errorf("performing request: %w", err)
 	}
-	defer resp.Body.Close()
+	defer func() { _ = resp.Body.Close() }()
 	body, err := io.ReadAll(io.LimitReader(resp.Body, 32<<20))
 	if err != nil {
 		return nil, fmt.Errorf("reading response body: %w", err)

@@ -65,4 +65,5 @@ release:
     See the [changelog](https://github.com/hitechcloud-vietnam/terraform-provider-hitechcloud/blob/main/CHANGELOG.md) for details.
 
 changelog:
-  skip: true
+  # GoReleaser v2 renamed `skip` to `disable`.
+  disable: true

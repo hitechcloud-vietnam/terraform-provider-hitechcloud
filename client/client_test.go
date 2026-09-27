@@ -412,7 +412,7 @@ func TestWaitForVMDeletedTimesOut(t *testing.T) {
 func TestAPIErrorTruncatesBody(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusBadRequest)
-		_, _ = w.Write([]byte(fmt.Sprintf(`{"error":"%s"}`, string(make([]byte, 5000)))))
+		_, _ = fmt.Fprintf(w, `{"error":"%s"}`, string(make([]byte, 5000)))
 	}))
 	defer srv.Close()
 

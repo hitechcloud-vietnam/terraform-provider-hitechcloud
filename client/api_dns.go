@@ -108,9 +108,7 @@ func parseDNSZone(m map[string]any) DNSZone {
 		ID:   FirstString(m, "id", "zone_id", "zoneid", "dns_id"),
 		Name: FirstString(m, "name", "zone", "domain", "zone_name"),
 	}
-	for _, rec := range parseDNSRecords(ExtractList(m, "records", "rows")) {
-		zone.Records = append(zone.Records, rec)
-	}
+	zone.Records = append(zone.Records, parseDNSRecords(ExtractList(m, "records", "rows"))...)
 	return zone
 }
 
