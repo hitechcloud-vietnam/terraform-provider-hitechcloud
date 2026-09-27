@@ -36,6 +36,9 @@ const (
 	EnvToken    = "HITECHCLOUD_TOKEN"
 	EnvEndpoint = "HITECHCLOUD_ENDPOINT"
 	EnvTimeout  = "HITECHCLOUD_REQUEST_TIMEOUT"
+	EnvUsername = "HITECHCLOUD_USERNAME"
+	EnvPassword = "HITECHCLOUD_PASSWORD"
+	EnvRefresh  = "HITECHCLOUD_REFRESH_TOKEN"
 )
 
 // Ensure the provider fully satisfies the framework interfaces.
@@ -55,9 +58,12 @@ func New(version string) func() provider.Provider {
 
 // providerModel maps provider schema data.
 type providerModel struct {
-	Token    types.String `tfsdk:"token"`
-	Endpoint types.String `tfsdk:"endpoint"`
-	Timeout  types.String `tfsdk:"request_timeout"`
+	Token        types.String `tfsdk:"token"`
+	RefreshToken types.String `tfsdk:"refresh_token"`
+	Username     types.String `tfsdk:"username"`
+	Password     types.String `tfsdk:"password"`
+	Endpoint     types.String `tfsdk:"endpoint"`
+	Timeout      types.String `tfsdk:"request_timeout"`
 }
 
 func (p *hiTechCloudProvider) Metadata(_ context.Context, _ provider.MetadataRequest, resp *provider.MetadataResponse) {
@@ -69,13 +75,34 @@ func (p *hiTechCloudProvider) Schema(_ context.Context, _ provider.SchemaRequest
 	resp.Schema = schema.Schema{
 		MarkdownDescription: "The HiTechCloud provider manages resources exposed by the " +
 			"[HiTechCloud User API](https://my.hitechcloud.vn) (`https://api.hitechcloud.vn`). " +
-			"Authentication uses a bearer token obtained from `POST /api/login`; " +
-			"see the provider documentation for how to obtain one.",
+			"Authentication uses the two tokens returned by `POST /api/login`: an access token " +
+			"(`token`) and a refresh token (`refresh_token`). Provide either `token` directly, " +
+			"or `username`/`password` to log in automatically; the refresh token renews the " +
+			"access token whenever it expires.",
 		Attributes: map[string]schema.Attribute{
 			"token": schema.StringAttribute{
-				MarkdownDescription: "HiTechCloud API bearer token. " +
+				MarkdownDescription: "HiTechCloud API access token (the `token` field of the `POST /api/login` response). " +
 					"May also be provided via the `" + EnvToken + "` environment variable. " +
-					"The token is marked sensitive and is never logged.",
+					"The token is marked sensitive and is never logged. " +
+					"Not needed when `username`/`password` are set.",
+				Optional:  true,
+				Sensitive: true,
+			},
+			"refresh_token": schema.StringAttribute{
+				MarkdownDescription: "HiTechCloud API refresh token (the `refresh_token` field of the `POST /api/login` response). " +
+					"Used by `POST /api/token` to obtain a fresh access token whenever the current one expires. " +
+					"May also be provided via the `" + EnvRefresh + "` environment variable.",
+				Optional:  true,
+				Sensitive: true,
+			},
+			"username": schema.StringAttribute{
+				MarkdownDescription: "Account email address used for `POST /api/login`. " +
+					"May also be provided via the `" + EnvUsername + "` environment variable.",
+				Optional: true,
+			},
+			"password": schema.StringAttribute{
+				MarkdownDescription: "Account password used for `POST /api/login`. " +
+					"May also be provided via the `" + EnvPassword + "` environment variable.",
 				Optional:  true,
 				Sensitive: true,
 			},
@@ -104,6 +131,21 @@ func (p *hiTechCloudProvider) Configure(ctx context.Context, req provider.Config
 	token := os.Getenv(EnvToken)
 	if !data.Token.IsNull() && !data.Token.IsUnknown() && data.Token.ValueString() != "" {
 		token = data.Token.ValueString()
+	}
+
+	refreshToken := os.Getenv(EnvRefresh)
+	if !data.RefreshToken.IsNull() && !data.RefreshToken.IsUnknown() && data.RefreshToken.ValueString() != "" {
+		refreshToken = data.RefreshToken.ValueString()
+	}
+
+	username := os.Getenv(EnvUsername)
+	if !data.Username.IsNull() && !data.Username.IsUnknown() && data.Username.ValueString() != "" {
+		username = data.Username.ValueString()
+	}
+
+	password := os.Getenv(EnvPassword)
+	if !data.Password.IsNull() && !data.Password.IsUnknown() && data.Password.ValueString() != "" {
+		password = data.Password.ValueString()
 	}
 
 	endpoint := os.Getenv(EnvEndpoint)
@@ -140,24 +182,38 @@ func (p *hiTechCloudProvider) Configure(ctx context.Context, req provider.Config
 		timeout = d
 	}
 
-	if token == "" {
-		resp.Diagnostics.AddAttributeError(
-			path.Root("token"),
-			"Missing HiTechCloud API token",
-			"Set the token attribute or the "+EnvToken+" environment variable. "+
-				"A token can be obtained by calling POST /api/login with your account credentials.",
-		)
-		return
-	}
-
 	cli, err := client.New(client.Config{
-		Endpoint: endpoint,
-		Token:    token,
-		Timeout:  timeout,
+		Endpoint:     endpoint,
+		Token:        token,
+		RefreshToken: refreshToken,
+		Timeout:      timeout,
 	})
 	if err != nil {
 		resp.Diagnostics.AddError("Unable to create HiTechCloud client", err.Error())
 		return
+	}
+
+	// No static token: log in with username/password. POST /api/login returns
+	// both tokens ("đăng nhập sinh 2 token"): token and refresh_token.
+	if token == "" {
+		if username == "" || password == "" {
+			resp.Diagnostics.AddAttributeError(
+				path.Root("token"),
+				"Missing HiTechCloud API credentials",
+				"Provide a token ("+EnvToken+"), or username and password ("+EnvUsername+
+					"/"+EnvPassword+") to log in via POST /api/login. "+
+					"An optional refresh_token ("+EnvRefresh+") renews the access token automatically.",
+			)
+			return
+		}
+		login, err := cli.Login(ctx, username, password)
+		if err != nil {
+			resp.Diagnostics.AddError("HiTechCloud login failed", err.Error())
+			return
+		}
+		if login.RefreshToken != "" {
+			cli.SetRefreshToken(login.RefreshToken)
+		}
 	}
 
 	resp.ResourceData = cli

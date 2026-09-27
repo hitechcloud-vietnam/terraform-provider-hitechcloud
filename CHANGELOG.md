@@ -4,6 +4,11 @@
 
 FEATURES:
 
+* **New provider authentication:** login via `username`/`password`
+  (`POST /api/login`) returns two tokens (`token` + `refresh_token`); the
+  access token is renewed automatically with `POST /api/token` and failed
+  requests are replayed. `refresh_token` can also be provided directly.
+
 * **New resource:** `hitechcloud_dns_zone`
 * **New resource:** `hitechcloud_dns_record`
 * **New resource:** `hitechcloud_domain_dns_record`
@@ -58,5 +63,14 @@ NOTES:
 
 * Initial release targeting the HiTechCloud User API
   (`https://api.hitechcloud.vn`) with bearer-token authentication via the
-  `token` attribute or the `HITECHCLOUD_TOKEN` environment variable.
+  `token` attribute or the `HITECHCLOUD_TOKEN` environment variable, or
+  username/password login (`HITECHCLOUD_USERNAME` / `HITECHCLOUD_PASSWORD`)
+  with automatic token renewal.
+* The Go client covers the full Postman surface: account, billing, support
+  (tickets, news, knowledge base, notifications), DNS, domains (incl. DNSSEC,
+  forwarding, EPP, renew/order), SSL certificates, compute/VM lifecycle,
+  AI Factory, storage (S3, PBS), bare metal/colocation/Hosting, partner
+  program, eKYC, MFA (passkey/email), WillExpired renewals and more.
 * Built with the Terraform Plugin Framework (protocol 6).
+* Releases are GPG-signed; the public signing key is kept in the
+  environment/secret store only and is not committed to the repository.

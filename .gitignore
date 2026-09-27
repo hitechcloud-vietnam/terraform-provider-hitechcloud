@@ -34,4 +34,5 @@ _collection_*.md
 GPG_PRIVATE_KEY.asc
 GPG_REVOCATION_CERT.asc
 *.rev
+GPG_PUBLIC_KEY.asc
 *.hitechcloud-user-api-production-2026-09-27.postman_collection.json

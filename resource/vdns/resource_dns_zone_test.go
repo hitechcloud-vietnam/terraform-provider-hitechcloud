@@ -82,8 +82,8 @@ func (m *mockDNSServer) handler() http.Handler {
 			delete(m.zones, id)
 			writeJSON(w, map[string]any{"status": "ok"})
 
-		case r.Method == http.MethodPost && regexp.MustCompile(`^/api/service/1/dns/[^/]+/record$`).MatchString(path):
-			zoneID := path[len("/api/service/1/dns/") : len(path)-len("/record")]
+		case r.Method == http.MethodPost && regexp.MustCompile(`^/api/service/1/dns/[^/]+/records$`).MatchString(path):
+			zoneID := path[len("/api/service/1/dns/") : len(path)-len("/records")]
 			// Auto-create the zone so record tests can run standalone.
 			if _, ok := m.zones[zoneID]; !ok {
 				m.zones[zoneID] = map[string]any{"id": zoneID, "name": zoneID + ".test"}
@@ -102,7 +102,7 @@ func (m *mockDNSServer) handler() http.Handler {
 			m.records[id] = rec
 			writeJSON(w, map[string]any{"id": id})
 
-		case r.Method == http.MethodGet && regexp.MustCompile(`^/api/service/1/dns/[^/]+/record/[^/]+$`).MatchString(path):
+		case r.Method == http.MethodGet && regexp.MustCompile(`^/api/service/1/dns/[^/]+/records/[^/]+$`).MatchString(path):
 			id := path[strings.LastIndex(path, "/")+1:]
 			rec, ok := m.records[id]
 			if !ok {
@@ -111,7 +111,7 @@ func (m *mockDNSServer) handler() http.Handler {
 			}
 			writeJSON(w, rec)
 
-		case r.Method == http.MethodPut && regexp.MustCompile(`^/api/service/1/dns/[^/]+/record/[^/]+$`).MatchString(path):
+		case r.Method == http.MethodPut && regexp.MustCompile(`^/api/service/1/dns/[^/]+/records/[^/]+$`).MatchString(path):
 			id := path[strings.LastIndex(path, "/")+1:]
 			rec, ok := m.records[id]
 			if !ok {
@@ -121,7 +121,7 @@ func (m *mockDNSServer) handler() http.Handler {
 			rec["content"] = q.Get("content")
 			writeJSON(w, map[string]any{"status": "ok"})
 
-		case r.Method == http.MethodDelete && regexp.MustCompile(`^/api/service/1/dns/[^/]+/record/[^/]+$`).MatchString(path):
+		case r.Method == http.MethodDelete && regexp.MustCompile(`^/api/service/1/dns/[^/]+/records/[^/]+$`).MatchString(path):
 			id := path[strings.LastIndex(path, "/")+1:]
 			delete(m.records, id)
 			writeJSON(w, map[string]any{"status": "ok"})

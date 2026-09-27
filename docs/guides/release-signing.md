@@ -15,12 +15,14 @@ publishing providers.
 
 ## The signing key
 
-The public signing key is committed to the repository as
-[`GPG_PUBLIC_KEY.asc`](https://github.com/hitechcloud-vietnam/terraform-provider-hitechcloud/blob/main/GPG_PUBLIC_KEY.asc)
-(ASCII armored). It is an RSA-4096 key owned by `HiTechCloud Vietnam
-<release@hitechcloud.vn>`.
+The public signing key is an RSA-4096 key owned by `HiTechCloud Vietnam
+<release@hitechcloud.vn>` (fingerprint
+`1CA3844693B18FA2FEABBC622F780BEC94499FD2`). It is **not** committed to the
+repository: the ASCII-armored key (`GPG_PUBLIC_KEY.asc`) is kept in the
+environment / secret store only and is git-ignored here.
 
-You can import and verify a release with:
+To verify a release, obtain the public key from the project's release
+environment (or from the GitHub account that signed it), then:
 
 ```shell
 gpg --import GPG_PUBLIC_KEY.asc
@@ -55,6 +57,7 @@ sha256sum -c terraform-provider-hitechcloud_v1.0.0_SHA256SUMS
    workflow still produces an unsigned draft release so artifacts are never
    blocked.
 
-~> **Security:** never commit the private key. `GPG_PRIVATE_KEY.asc` and
-revocation certificates are git-ignored in this repository; keep them outside
-version control and store the private key only in the CI secret store.
+~> **Security:** never commit any key material. `GPG_PRIVATE_KEY.asc`,
+`GPG_PUBLIC_KEY.asc` and revocation certificates are git-ignored in this
+repository; keep them outside version control and store the keys only in the
+CI secret store / environment.

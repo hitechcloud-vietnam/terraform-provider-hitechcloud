@@ -32,6 +32,7 @@ import (
 	"net/url"
 	"strconv"
 	"strings"
+	"sync"
 	"time"
 )
 
@@ -62,6 +63,10 @@ type Config struct {
 	// all authenticated endpoints. Never logged.
 	Token string
 
+	// RefreshToken, when set, is used to obtain a fresh access token via
+	// POST /api/token whenever the current one expires (HTTP 401/403).
+	RefreshToken string
+
 	// UserAgent overrides the default User-Agent header.
 	UserAgent string
 
@@ -84,7 +89,9 @@ type Config struct {
 // Client is a HiTechCloud User API client.
 type Client struct {
 	baseURL      *url.URL
+	tokenMu      sync.RWMutex
 	token        string
+	refreshToken string
 	userAgent    string
 	http         *http.Client
 	maxRetries   int
@@ -146,6 +153,7 @@ func New(cfg Config) (*Client, error) {
 	return &Client{
 		baseURL:      u,
 		token:        cfg.Token,
+		refreshToken: cfg.RefreshToken,
 		userAgent:    userAgent,
 		http:         httpClient,
 		maxRetries:   maxRetries,
@@ -161,7 +169,30 @@ func (c *Client) BaseURL() string {
 
 // SetToken replaces the bearer token. Used by Login.
 func (c *Client) SetToken(token string) {
+	c.tokenMu.Lock()
+	defer c.tokenMu.Unlock()
 	c.token = token
+}
+
+// TokenString returns the current bearer token.
+func (c *Client) TokenString() string {
+	c.tokenMu.RLock()
+	defer c.tokenMu.RUnlock()
+	return c.token
+}
+
+// SetRefreshToken stores the refresh token used for automatic token renewal.
+func (c *Client) SetRefreshToken(token string) {
+	c.tokenMu.Lock()
+	defer c.tokenMu.Unlock()
+	c.refreshToken = token
+}
+
+// RefreshTokenString returns the current refresh token.
+func (c *Client) RefreshTokenString() string {
+	c.tokenMu.RLock()
+	defer c.tokenMu.RUnlock()
+	return c.refreshToken
 }
 
 // Verb helpers ---------------------------------------------------------------
@@ -188,7 +219,10 @@ func (c *Client) Delete(ctx context.Context, path string, query url.Values, out 
 	return c.do(ctx, http.MethodDelete, path, query, out)
 }
 
-// do builds and executes a request with retries for idempotent methods.
+// do builds and executes a request with retries for idempotent methods. When
+// the API reports an expired/invalid bearer token and a refresh token is
+// available, a fresh access token is obtained via POST /api/token and the
+// request is replayed once.
 func (c *Client) do(ctx context.Context, method, path string, query url.Values, out any) error {
 	u := *c.baseURL
 	// path always starts with "/".
@@ -203,6 +237,7 @@ func (c *Client) do(ctx context.Context, method, path string, query url.Values, 
 		attempts += c.maxRetries
 	}
 
+	refreshed := false
 	var lastErr error
 	for attempt := 0; attempt < attempts; attempt++ {
 		if attempt > 0 {
@@ -217,11 +252,44 @@ func (c *Client) do(ctx context.Context, method, path string, query url.Values, 
 			return nil
 		}
 		lastErr = err
+
+		// Access token expired or was revoked: renew it once with the refresh
+		// token (POST /api/token) and replay the request immediately. The
+		// auth endpoints themselves never trigger another refresh cycle.
+		if !refreshed && isAuthError(err) && c.RefreshTokenString() != "" && !isAuthPath(path) {
+			if _, rerr := c.RefreshToken(ctx, c.RefreshTokenString()); rerr == nil {
+				refreshed = true
+				attempt-- // do not consume a retry slot
+				continue
+			}
+		}
+
 		if !retryable || !retryableErr {
 			return err
 		}
 	}
 	return fmt.Errorf("request %s %s failed after %d attempt(s): %w", method, redactURL(&u), attempts, lastErr)
+}
+
+// isAuthError reports whether err indicates an expired or invalid bearer
+// token (HTTP 401/403).
+func isAuthError(err error) bool {
+	var apiErr *APIError
+	if errors.As(err, &apiErr) {
+		return apiErr.StatusCode == http.StatusUnauthorized || apiErr.StatusCode == http.StatusForbidden
+	}
+	return false
+}
+
+// isAuthPath reports whether path belongs to the authentication endpoints
+// (/api/login, /api/token, /api/logout, /api/revoke) which must never
+// re-enter the refresh flow.
+func isAuthPath(path string) bool {
+	switch path {
+	case "/api/login", "/api/token", "/api/logout", "/api/revoke":
+		return true
+	}
+	return false
 }
 
 // doOnce executes a single HTTP request. It returns whether the error is
@@ -233,8 +301,8 @@ func (c *Client) doOnce(ctx context.Context, method string, u *url.URL, out any)
 	}
 	req.Header.Set("Accept", "application/json")
 	req.Header.Set("User-Agent", c.userAgent)
-	if c.token != "" {
-		req.Header.Set("Authorization", "Bearer "+c.token)
+	if tok := c.TokenString(); tok != "" {
+		req.Header.Set("Authorization", "Bearer "+tok)
 	}
 
 	c.debug("%s %s", method, redactURL(u))

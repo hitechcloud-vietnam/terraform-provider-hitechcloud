@@ -394,6 +394,12 @@ func (c *Client) GetServiceRDNS(ctx context.Context, serviceID string) ([]RDNSRe
 	if err := c.Get(ctx, path, nil, &raw); err != nil {
 		return nil, err
 	}
+	return parseRDNS(raw), nil
+}
+
+// parseRDNS understands both response shapes: a mapping {ip: hostname} and a
+// wrapped list of records.
+func parseRDNS(raw any) []RDNSRecord {
 	out := []RDNSRecord{}
 	switch v := unwrapValue(raw).(type) {
 	case map[string]any:
@@ -409,7 +415,7 @@ func (c *Client) GetServiceRDNS(ctx context.Context, serviceID string) ([]RDNSRe
 					Hostname: FirstString(m, "hostname", "rdns", "ptr", "name"),
 				})
 			}
-			return out, nil
+			return out
 		}
 		for k, val := range v {
 			if s := asString(val); s != "" {
@@ -428,7 +434,7 @@ func (c *Client) GetServiceRDNS(ctx context.Context, serviceID string) ([]RDNSRe
 			})
 		}
 	}
-	return out, nil
+	return out
 }
 
 // SetServiceRDNS sets the reverse DNS hostname of one IP address

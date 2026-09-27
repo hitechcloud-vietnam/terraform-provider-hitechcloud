@@ -37,6 +37,9 @@ func (c *Client) Login(ctx context.Context, username, password string) (*LoginRe
 		return nil, fmt.Errorf("login response did not include a token")
 	}
 	c.SetToken(result.Token)
+	if result.RefreshToken != "" {
+		c.SetRefreshToken(result.RefreshToken)
+	}
 	return result, nil
 }
 
@@ -60,6 +63,9 @@ func (c *Client) RefreshToken(ctx context.Context, refreshToken string) (*LoginR
 		return nil, fmt.Errorf("token refresh response did not include a token")
 	}
 	c.SetToken(result.Token)
+	if result.RefreshToken != "" {
+		c.SetRefreshToken(result.RefreshToken)
+	}
 	return result, nil
 }
 

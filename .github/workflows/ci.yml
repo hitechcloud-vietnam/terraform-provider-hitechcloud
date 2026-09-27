@@ -37,6 +37,10 @@ jobs:
         uses: golangci/golangci-lint-action@v6
         with:
           version: latest
+          # Build golangci-lint from source with the runner's Go toolchain.
+          # The prebuilt binary is compiled with an older Go (e.g. go1.24)
+          # and refuses to lint a module targeting go 1.25+.
+          install-mode: go-install
           args: --timeout=5m
 
   test:

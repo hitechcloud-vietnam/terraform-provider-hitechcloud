@@ -19,15 +19,25 @@ portal utilities.
 ## Authentication
 
 The provider authenticates against the HiTechCloud User API
-(`POST /api/login?username=...&password=...`), which returns a bearer token.
-All subsequent API calls use `Authorization: Bearer <token>`.
+(`POST /api/login?username=...&password=...`), which returns **two tokens**: an
+access `token` and a `refresh_token`. All subsequent API calls use
+`Authorization: Bearer <token>`; when the access token expires the provider
+renews it automatically with `POST /api/token?refresh_token=...` and replays
+the failed request. `POST /api/revoke` invalidates the refresh token.
 
-You can obtain a token from the API and expose it through the `token` attribute
-or the `HITECHCLOUD_TOKEN` environment variable. Never hard-code credentials in
-Terraform configuration; use environment variables or a secrets manager.
+You can either log in with `username`/`password` (or `HITECHCLOUD_USERNAME` /
+`HITECHCLOUD_PASSWORD`) or supply a pre-issued token via the `token` attribute
+(or `HITECHCLOUD_TOKEN`), optionally with `refresh_token`
+(or `HITECHCLOUD_REFRESH_TOKEN`) for automatic renewal. Never hard-code
+credentials in Terraform configuration; use environment variables or a secrets
+manager.
 
 ```sh
-export HITECHCLOUD_TOKEN="your-api-token"
+export HITECHCLOUD_USERNAME="your-username"
+export HITECHCLOUD_PASSWORD="your-password"
+# Or use a pre-issued token instead:
+# export HITECHCLOUD_TOKEN="your-api-token"
+# export HITECHCLOUD_REFRESH_TOKEN="your-refresh-token"
 # Optional: point at a non-production API endpoint
 export HITECHCLOUD_ENDPOINT="https://api.hitechcloud.vn"
 ```
@@ -45,7 +55,10 @@ terraform {
 }
 
 provider "hitechcloud" {
-  # token           = "..."            # or HITECHCLOUD_TOKEN
+  # username        = "..."            # or HITECHCLOUD_USERNAME (2-token login)
+  # password        = "..."            # or HITECHCLOUD_PASSWORD (2-token login)
+  # token           = "..."            # or HITECHCLOUD_TOKEN (pre-issued)
+  # refresh_token   = "..."            # or HITECHCLOUD_REFRESH_TOKEN (auto-renew)
   # endpoint        = "https://api.hitechcloud.vn" # or HITECHCLOUD_ENDPOINT
   # request_timeout = "60s"            # or HITECHCLOUD_REQUEST_TIMEOUT
 }
@@ -174,8 +187,9 @@ triggers `.github/workflows/release.yml`.
 ## Release Signing
 
 Every release ships `SHA256SUMS` plus a detached GPG signature
-(`SHA256SUMS.sig`). The ASCII-armored public signing key is committed as
-[`GPG_PUBLIC_KEY.asc`](GPG_PUBLIC_KEY.asc); see
+(`SHA256SUMS.sig`). The ASCII-armored public signing key (fingerprint
+`1CA3844693B18FA2FEABBC622F780BEC94499FD2`) is **not** committed to this
+repository — it is kept in the environment / secret store only. See
 [`docs/guides/release-signing.md`](docs/guides/release-signing.md) for how to
 verify releases and how to configure the `GPG_PRIVATE_KEY` / `GPG_PASSPHRASE`
 repository secrets for your own signing key.

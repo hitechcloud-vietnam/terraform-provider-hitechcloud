@@ -32,7 +32,7 @@ func TestProviderSchemaHasConfigAttributes(t *testing.T) {
 	if resp.Diagnostics.HasError() {
 		t.Fatalf("Schema() diagnostics: %v", resp.Diagnostics)
 	}
-	for _, attr := range []string{"token", "endpoint", "request_timeout"} {
+	for _, attr := range []string{"token", "refresh_token", "username", "password", "endpoint", "request_timeout"} {
 		if _, ok := resp.Schema.Attributes[attr]; !ok {
 			t.Fatalf("schema is missing attribute %q", attr)
 		}
