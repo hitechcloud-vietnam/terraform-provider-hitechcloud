@@ -1,0 +1,4 @@
+fix: bump google.golang.org/grpc to v1.83.2 (Dependabot alert #19)
+
+The initial remediation pinned grpc at v1.83.1; a newer advisory
+(GHSA affecting >= 1.83.0, < 1.83.2) requires v1.83.2.
