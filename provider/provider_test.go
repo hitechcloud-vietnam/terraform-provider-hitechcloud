@@ -43,12 +43,12 @@ func TestProviderRegistersResourcesAndDataSources(t *testing.T) {
 	p := provider.New("test")()
 
 	resources := p.Resources(context.Background())
-	if len(resources) != 25 {
-		t.Fatalf("Resources() count = %d, want 25", len(resources))
+	if len(resources) != 35 {
+		t.Fatalf("Resources() count = %d, want 35", len(resources))
 	}
 	dataSources := p.DataSources(context.Background())
-	if len(dataSources) != 39 {
-		t.Fatalf("DataSources() count = %d, want 39", len(dataSources))
+	if len(dataSources) != 47 {
+		t.Fatalf("DataSources() count = %d, want 47", len(dataSources))
 	}
 
 	// Every registered type must be instantiable.

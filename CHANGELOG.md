@@ -1,5 +1,58 @@
 # Changelog
 
+## 1.2.0 (September 28, 2026)
+
+FEATURES:
+
+* **New resource:** `hitechcloud_service_label` — manage the display label of a
+  service (`POST /api/service/{id}/label`).
+* **New resource:** `hitechcloud_service_billing_cycle` — manage the billing
+  cycle of a service (`POST /api/service/{id}/cycle`).
+* **New resource:** `hitechcloud_pmg_domain` — protect a mail domain through a
+  PMG service and set its mail transport (`POST /api/service/{id}/htcpmg/domains`,
+  `/transport`).
+* **New resource:** `hitechcloud_pve_rdns` — reverse DNS (PTR) of a Proxmox
+  service IP (`POST /api/service/{id}/htcpve/rdns`).
+* **New resource:** `hitechcloud_ipam_rdns` — reverse DNS (PTR) of an IPAM
+  address (`POST /api/service/{id}/htcipam/rdns`).
+* **New resource:** `hitechcloud_pve_backup` — take Proxmox VE backups
+  (`POST /api/service/{id}/htcpve/backups`).
+* **New resource:** `hitechcloud_vm_rdns` — reverse DNS (PTR) of a VM IP
+  (`POST /api/service/{id}/vms/{vmid}/rdns`).
+* **New resource:** `hitechcloud_partner_payout` — request partner wallet
+  payouts (`POST /api/partner/payouts`).
+* **New resource:** `hitechcloud_affiliate_adv_voucher` — manage advanced
+  affiliate discount vouchers (`POST/DELETE /api/affiliates_adv/{client_id}/vouchers`).
+* **New resource:** `hitechcloud_domain_contact_info` — manage the contact
+  information of a registered domain (`PUT /api/domain/{id}/contact`).
+* **New data source:** `hitechcloud_affiliate` — affiliate summary, campaigns,
+  commissions, payouts, vouchers and commission plans.
+* **New data source:** `hitechcloud_affiliate_adv` — advanced affiliate profile,
+  statistics, referrals, vouchers and commissions.
+* **New data source:** `hitechcloud_locations` — supported countries and states.
+* **New data source:** `hitechcloud_server_stock` — dedicated server stock.
+* **New data source:** `hitechcloud_service_resources` — service resource
+  summary and upgrade options.
+* **New data source:** `hitechcloud_news` — news and knowledgebase categories.
+* **New data source:** `hitechcloud_product_config` — order form configuration
+  of a product.
+* **New data source:** `hitechcloud_mfa_status` — passkey and email MFA status
+  of a user.
+
+NOTES:
+
+* The client now covers **348/348** Postman collection endpoints, including the
+  newly added `GET /api/dns`, `GET /api/service/{id}/ip`,
+  `GET /api/service/{id}/cluster` and filtered `GET /api/statuses` wrappers.
+* Terraform surface: 35 resources and 47 data sources.
+
+SECURITY:
+
+* Upgraded `golang.org/x/crypto` to v0.52.0 (13 Dependabot alerts, 7 critical).
+* Upgraded `golang.org/x/net` to v0.55.0 (1 Dependabot alert).
+* Upgraded `google.golang.org/grpc` to v1.83.1 (4 Dependabot alerts).
+* Raised the module's minimum Go version to 1.26 and aligned CI to Go 1.26.x.
+
 ## 1.1.0 (September 28, 2026)
 
 FEATURES:

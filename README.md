@@ -110,7 +110,17 @@ resource "hitechcloud_dns_record" "www" {
 | `hitechcloud_domain_forwarding` | URL forwarding (web redirect) of a domain |
 | `hitechcloud_service_autorenew` | Auto-renew flag of a service or domain |
 | `hitechcloud_vm_snapshot` | Proxmox VM snapshot |
+| `hitechcloud_vm_rdns` | Reverse DNS (PTR) of a VM IP |
+| `hitechcloud_pve_rdns` | Reverse DNS (PTR) of a Proxmox service IP |
+| `hitechcloud_ipam_rdns` | Reverse DNS (PTR) of an IPAM address |
+| `hitechcloud_pve_backup` | Proxmox VE backup |
+| `hitechcloud_pmg_domain` | PMG mail domain protection and transport |
+| `hitechcloud_service_label` | Display label of a service |
+| `hitechcloud_service_billing_cycle` | Billing cycle of a service |
 | `hitechcloud_partner_lead` | Partner lead registration |
+| `hitechcloud_partner_payout` | Partner wallet payout request |
+| `hitechcloud_affiliate_adv_voucher` | Advanced-affiliate discount voucher |
+| `hitechcloud_domain_contact_info` | Contact information of a registered domain |
 
 ## Data Sources
 
@@ -153,8 +163,16 @@ resource "hitechcloud_dns_record" "www" {
 | `hitechcloud_partner` | Partner profile, tiers, rate card, wallet |
 | `hitechcloud_willexpired` | Expiring services/domains and invoices |
 | `hitechcloud_account_logs` | Account activity log |
+| `hitechcloud_locations` | Supported countries and states |
+| `hitechcloud_mfa_status` | Passkey / email MFA status of a user |
 | `hitechcloud_notifications` | Portal notifications |
 | `hitechcloud_statuses` | Service status entries |
+| `hitechcloud_news` | News and knowledgebase categories |
+| `hitechcloud_server_stock` | Dedicated server stock |
+| `hitechcloud_service_resources` | Service resource summary and upgrade options |
+| `hitechcloud_product_config` | Order form configuration of a product |
+| `hitechcloud_affiliate` | Affiliate summary, campaigns, commissions, payouts, vouchers |
+| `hitechcloud_affiliate_adv` | Advanced affiliate profile, stats, referrals, vouchers |
 
 ## Importing Existing Resources
 
