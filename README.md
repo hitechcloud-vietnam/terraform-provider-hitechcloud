@@ -105,6 +105,12 @@ resource "hitechcloud_dns_record" "www" {
 | `hitechcloud_contact` | Account contact (create/update; API has no delete) |
 | `hitechcloud_ticket` | Support ticket (destroy closes it) |
 | `hitechcloud_rdns` | Reverse DNS (PTR) of a service IP |
+| `hitechcloud_dnssec_key` | DNSSEC (DS) key of a registered domain |
+| `hitechcloud_email_forwarding` | Email forwarding rule of a domain |
+| `hitechcloud_domain_forwarding` | URL forwarding (web redirect) of a domain |
+| `hitechcloud_service_autorenew` | Auto-renew flag of a service or domain |
+| `hitechcloud_vm_snapshot` | Proxmox VM snapshot |
+| `hitechcloud_partner_lead` | Partner lead registration |
 
 ## Data Sources
 
@@ -138,6 +144,15 @@ resource "hitechcloud_dns_record" "www" {
 | `hitechcloud_url_shortener_links` | Shortened URLs |
 | `hitechcloud_tickets` | Support tickets |
 | `hitechcloud_ticket_departments` | Support departments |
+| `hitechcloud_dnssec_keys` | DNSSEC keys and available flags of a domain |
+| `hitechcloud_domain_contact` | Domain contacts, EPP code, lock state |
+| `hitechcloud_pbs` | Proxmox Backup Server info, usage, snapshots |
+| `hitechcloud_s3_connection` | S3 connection info, credentials, usage |
+| `hitechcloud_pve` | Proxmox VE status, VMs, IPs, backups, snapshots |
+| `hitechcloud_ipam` | IPAM IPs, subnets and reverse DNS |
+| `hitechcloud_partner` | Partner profile, tiers, rate card, wallet |
+| `hitechcloud_willexpired` | Expiring services/domains and invoices |
+| `hitechcloud_account_logs` | Account activity log |
 | `hitechcloud_notifications` | Portal notifications |
 | `hitechcloud_statuses` | Service status entries |
 

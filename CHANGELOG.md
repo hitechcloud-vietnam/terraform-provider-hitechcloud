@@ -1,5 +1,38 @@
 # Changelog
 
+## 1.1.0 (September 28, 2026)
+
+FEATURES:
+
+* **New resource:** `hitechcloud_dnssec_key` — manage DNSSEC (DS) keys of a
+  registered domain (`PUT/DELETE /api/domain/{id}/dnssec`).
+* **New resource:** `hitechcloud_email_forwarding` — manage domain email
+  forwarding rules (`PUT /api/domain/{id}/emforwarding`).
+* **New resource:** `hitechcloud_domain_forwarding` — manage URL forwarding of
+  a registered domain (`PUT /api/domain/{id}/forwarding`).
+* **New resource:** `hitechcloud_service_autorenew` — manage automatic renewal
+  of services and domains (`PUT /api/willexpired/{type}/{id}/autorenew`).
+* **New resource:** `hitechcloud_vm_snapshot` — take Proxmox VM snapshots
+  (`POST /api/service/{id}/htcpve/snapshots`).
+* **New resource:** `hitechcloud_partner_lead` — register partner leads
+  (`POST /api/partner/leads`).
+* **New data source:** `hitechcloud_dnssec_keys` — list DNSSEC keys and
+  available flags of a domain.
+* **New data source:** `hitechcloud_domain_contact` — domain contacts, EPP
+  code, registrar lock and ID protection state.
+* **New data source:** `hitechcloud_pbs` — Proxmox Backup Server connection
+  info, usage, metrics, snapshots and groups.
+* **New data source:** `hitechcloud_s3_connection` — S3 connection info,
+  credentials, usage and metrics.
+* **New data source:** `hitechcloud_pve` — Proxmox VE status, VM inventory,
+  IPs, backups, snapshots and usage.
+* **New data source:** `hitechcloud_ipam` — IPAM IPs, subnets and reverse DNS.
+* **New data source:** `hitechcloud_partner` — partner profile, tiers, rate
+  card, wallet and recent leads.
+* **New data source:** `hitechcloud_willexpired` — expiring services/domains,
+  summary and upcoming invoices.
+* **New data source:** `hitechcloud_account_logs` — account activity log.
+
 ## 1.0.0 (September 28, 2026)
 
 FEATURES:
